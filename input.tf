@@ -1,6 +1,20 @@
 # Copyright (c) 2020 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
+variable "input" {
+    type = object({
+        resident     = any
+    })
+    description = "Resources identifier from resident module"
+}
+
+variable "asset" {
+  type = object({
+    resident = any
+  })
+  description = "Retrieve asset identifier"
+}
+
 variable "tenancy" {
   type = object({
     id      = string,
@@ -43,13 +57,6 @@ variable "network" {
     route_tables = map(any),
     subnets      = map(any),
     security_lists = any
-})
+  })
   description = "Network Configuration"
-}
-
-variable "input" {
-    type = object({
-        resident     = any
-    })
-    description = "Resources identifier from resident module"
 }
