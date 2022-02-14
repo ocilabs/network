@@ -1,2 +1,2 @@
-# asset-netowrk
-Network topology for a service resident
+# ocloud-assets-network
+Service Assets for the Terraform ocloud framework
