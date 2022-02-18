@@ -3,12 +3,14 @@
 
 variable "input" {
     type = object({
-        resident     = any
+      internet = string,
+      nat      = string,
+      ipv6     = bool
     })
     description = "Resources identifier from resident module"
 }
 
-variable "asset" {
+variable "assets" {
   type = object({
     resident = any
   })

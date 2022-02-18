@@ -37,7 +37,7 @@ data "oci_core_drgs" "segment" {
 }
 data "oci_core_internet_gateways" "segment" {
   depends_on = [oci_core_internet_gateway.segment]
-  count          = var.network.gateways.internet.create == true ? 1 : 0
+  count          = var.input.internet == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   display_name   = var.network.gateways.internet.name
   state          = "AVAILABLE"
@@ -45,7 +45,7 @@ data "oci_core_internet_gateways" "segment" {
 }
 data "oci_core_nat_gateways" "segment" {
   depends_on = [oci_core_nat_gateway.segment]
-  count          = var.network.gateways.nat.create == true ? 1 : 0
+  count          = var.input.nat == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   display_name   = var.network.gateways.nat.name
   state          = "AVAILABLE"
