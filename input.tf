@@ -5,7 +5,8 @@ variable "input" {
     type = object({
       internet = string,
       nat      = string,
-      ipv6     = bool
+      ipv6     = bool,
+      osn      = string
     })
     description = "Resources identifier from resident module"
 }

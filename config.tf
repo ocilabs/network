@@ -53,7 +53,7 @@ data "oci_core_nat_gateways" "segment" {
 }
 data "oci_core_service_gateways" "segment" {
   depends_on = [oci_core_service_gateway.segment]
-  count          = var.network.gateways.osn.create == true ? 1 : 0
+  count          = var.input.osn != "DISABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
