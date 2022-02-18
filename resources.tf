@@ -65,7 +65,7 @@ resource "oci_core_service_gateway" "segment" {
     depends_on     = [oci_core_vcn.segment]
     compartment_id = data.oci_identity_compartments.network.compartments[0].id
     vcn_id         = oci_core_vcn.segment.id
-    count          = var.network.gateways.osn.create == true ? 1 : 0
+    count          = var.input.osn != "DISABLE" ? 1 : 0
     display_name   = var.network.gateways.osn.name
     defined_tags   = var.assets.resident.defined_tags
     freeform_tags  = var.assets.resident.freeform_tags
