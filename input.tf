@@ -54,7 +54,7 @@ variable "network" {
     compartment  = string,
     stage        = number,
     cidr         = string,
-    ipv6         = bool,
+    #ipv6         = bool,
     gateways     = any,
     route_tables = map(any),
     subnets      = map(any),
