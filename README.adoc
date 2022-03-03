@@ -13,7 +13,7 @@ No requirements.
 |===
 
 == Modules
-`// --- network configuration --- //
+object(// --- network configuration --- //
 module "network" {
   source = "github.com/ocilabs/network"
   depends_on = [module.configuration, module.resident]
@@ -37,7 +37,7 @@ output "network" {
     for resource, parameter in module.network : resource => parameter
     }
 }
-// --- network configuration --- //`
+// --- network configuration --- //)
 
 == Resources
 
