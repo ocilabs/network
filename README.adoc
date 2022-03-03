@@ -13,8 +13,31 @@ No requirements.
 |===
 
 == Modules
-
-No modules.
+`// --- network configuration --- //
+module "network" {
+  source = "github.com/ocilabs/network"
+  depends_on = [module.configuration, module.resident]
+  providers = {oci = oci.service}
+  for_each  = {for segment in local.segments : segment.name => segment}
+  tenancy   = module.configuration.tenancy
+  resident  = module.configuration.resident
+  network   = module.configuration.network[each.key]
+  input = {
+    internet = var.internet
+    nat      = var.nat
+    ipv6     = var.ipv6
+    osn      = var.osn
+  }
+  assets = {
+    resident = module.resident
+  }
+}
+output "network" {
+  value = {
+    for resource, parameter in module.network : resource => parameter
+    }
+}
+// --- network configuration --- //`
 
 == Resources
 
