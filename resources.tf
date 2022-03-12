@@ -94,7 +94,7 @@ resource "oci_core_route_table" "segment" {
     destination      = rule.destination
     destination_type = rule.destination_type
     description      = rule.description
-    }]
+    }if contains(local.gateway_list, route_rules.value.network_entity)]
     content {
     network_entity_id = local.gateway_ids[route_rules.value.network_entity]
     destination       = route_rules.value.destination
