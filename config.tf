@@ -101,8 +101,8 @@ locals {
         destination_type = route.gateway == "osn" ? "SERVICE_CIDR_BLOCK" : "CIDR_BLOCK"
         description      = "Routes ${route.name} traffic via the ${route.gateway} gateway."
     }} 
-  }}
-  #}if contains(local.gateway_list, route.gateway_name)}
+  #}}
+  }if contains(local.gateway_list, route.gateway_name)}
   osn_ids = {
     "all"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
