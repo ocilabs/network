@@ -106,7 +106,11 @@ resource "oci_core_route_table" "segment" {
 
 resource "oci_core_subnet" "segment" {
   depends_on                 = [
-    oci_core_default_security_list.default_security_list
+    oci_core_default_security_list.default_security_list,
+    oci_core_drg_attachment.segment,
+    oci_core_internet_gateway.segment,
+    oci_core_service_gateway.segment,
+    oci_core_nat_gateway.segment
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
