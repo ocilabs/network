@@ -52,4 +52,8 @@ output "gateway_list" {
 output "routes" {
   value = local.routes
 }
+output "route_tables" {
+  description = "A list of route_tables for the Virtual Cloud Network (VCN)"
+  value       = local.route_tables
+}
 // --- Temp ---//

@@ -93,7 +93,7 @@ locals {
         network_entity   = route.gateway
         destination      = cidr
         destination_type = route.gateway == "osn" ? "SERVICE_CIDR_BLOCK" : "CIDR_BLOCK"
-        description      = "Routes ${name} traffic via the ${cidr} gateway as next hop"
+        description      = "Routes ${name} traffic via the ${route.gateway} gateway as next hop"
     }} 
   }}
   osn_ids = {
