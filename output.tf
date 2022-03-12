@@ -38,9 +38,8 @@ output "security_list_ids" {
   value       = local.security_list_ids
 }
 
-/*
-output "security_groups" {
+output "security_group_ids" {
   description = "Security Group"
-  value       = length(oci_core_network_security_group.segment) > 0 ? oci_core_network_security_group.segment[*].id : null
+  value       = {for group in oci_core_network_security_group.segment : group.display_name => group.id}
 }
-// --- Security ---/*/
+// --- Security ---//
