@@ -108,7 +108,7 @@ locals {
   }
   route_table_ids   = merge(
     {for table in oci_core_route_table.segment : table.display_name => table.id}, 
-    {"default_route_table" = data.oci_core_route_tables.default.route_tables.id}
+    {"default_route_table" = data.oci_core_route_tables.default.route_tables[0].id}
   )
   security_list_ids = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
