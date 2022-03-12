@@ -87,7 +87,7 @@ locals {
       length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].id : null
     ])
   )
-  routes = {for route in var.network.routes: route.name => {
+  routes = {for route in var.network.route_table_input: route.name => {
     display_name = route.name
     route_rules  = {for destination in route.destinations: destination.key => {
         network_entity   = route.gateway
