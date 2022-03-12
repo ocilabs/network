@@ -29,8 +29,8 @@ output "route_tables" {
 // --- Routing ---//
 
 // --- Temp ---//
-output "create_gateways" {
-    value       = local.create_gateways.osn
+output "gateway_list" {
+    value       = local.gateway_list
 }
 // --- Temp ---//
 
