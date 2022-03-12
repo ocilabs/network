@@ -44,9 +44,3 @@ output "security_groups" {
   value       = length(oci_core_network_security_group.segment) > 0 ? oci_core_network_security_group.segment[*].id : null
 }
 // --- Security ---/*/
-
-// --- Temp ---//
-output "default_route_table" {
-  value = data.oci_core_route_tables.default_route_table
-}
-// --- Temp ---//

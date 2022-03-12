@@ -58,7 +58,7 @@ data "oci_core_service_gateways" "segment" {
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
 }
-data "oci_core_route_tables" "default_route_table" {
+data "oci_core_route_tables" "default" {
   depends_on     = [oci_core_vcn.segment]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   #display_name   = "Default Route Table for organization_service_dev_1" 
@@ -106,7 +106,10 @@ locals {
     "all"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
   }
-  route_table_ids   = {for table in oci_core_route_table.segment : table.display_name => table.id}
+  route_table_ids   = merge(
+    {for table in oci_core_route_table.segment : table.display_name => table.id}, 
+    {"default_route_table" = data.oci_core_route_tables.default.route_tables.id}
+  )
   security_list_ids = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
 
