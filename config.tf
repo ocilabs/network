@@ -89,11 +89,11 @@ locals {
   )
   routes = {for route in var.network.route_table_input: route.name => {
     display_name = route.name
-    route_rules  = {for destination in route.destinations: destination.key => {
+    route_rules  = {for name, cidr in route.destinations: name => {
         network_entity   = route.gateway
-        destination      = destination.value
+        destination      = cidr
         destination_type = route.gateway == "osn" ? "SERVICE_CIDR_BLOCK" : "CIDR_BLOCK"
-        description      = "Routes ${destination.key} traffic via the ${route.gateway} gateway as next hop"
+        description      = "Routes ${name} traffic via the ${cidr} gateway as next hop"
     }} 
   }}
   osn_ids = {
