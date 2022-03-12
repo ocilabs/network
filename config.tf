@@ -72,19 +72,14 @@ locals {
     "nat" = var.input.nat == "ENABLE" ? true : false
     "osn" = var.input.osn != "DISABLE" ? true :false
   }
-  gateway_list =     compact([
-      length(data.oci_core_drgs.segment) > 0 ? "drg" : null,
-      length(data.oci_core_internet_gateways.segment) > 0 ? "internet" : null,
-      length(data.oci_core_nat_gateways.segment) > 0 ? "nat" : null,
-      length(data.oci_core_service_gateways.segment) > 0 ? "osn" : null
-    ])
+  gateway_list = compact([
+    length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].display_name : null,
+    length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].display_name : null,
+    length(data.oci_core_nat_gateways.segment) > 0 ? data.oci_core_nat_gateways.segment[0].nat_gateways[0].display_name : null,
+    length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].display_name : null
+  ])
   gateway_ids = zipmap(
-    compact([
-      length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].display_name : null,
-      length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].display_name : null,
-      length(data.oci_core_nat_gateways.segment) > 0 ? data.oci_core_nat_gateways.segment[0].nat_gateways[0].display_name : null,
-      length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].display_name : null
-    ]),
+    local.gateway_list,
     compact([
       length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].id : null,
       length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].id : null,
@@ -92,7 +87,15 @@ locals {
       length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].id : null
     ])
   )
-  route_rules  = {for table, route_rules in var.network.route_tables: table => route_rules} 
+  routes = {for route in var.network.routes: route.name => {
+    display_name = route.name
+    route_rules  = {for destination in route.destinations: destination.key => {
+        network_entity   = route.gateway
+        destination      = destination.value
+        destination_type = route.gateway == "osn" ? "SERVICE_CIDR_BLOCK" : "CIDR_BLOCK"
+        description      = "Routes ${destination.key} traffic via the ${route.gateway} gateway as next hop"
+    }} 
+  }}
   osn_ids = {
     "all"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")

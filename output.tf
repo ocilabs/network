@@ -49,7 +49,7 @@ output "security_groups" {
 output "gateway_list" {
   value = local.gateway_list
 }
-output "route_rules" {
-  value = local.route_rules
+output "routes" {
+  value = local.routes
 }
 // --- Temp ---//

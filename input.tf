@@ -57,6 +57,7 @@ variable "network" {
     cidr         = string,
     gateways     = any,
     route_tables = map(any),
+    routes       = list(any),
     subnets      = map(any),
     security_lists = any
   })
