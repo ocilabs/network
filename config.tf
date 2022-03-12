@@ -68,9 +68,10 @@ data "oci_core_route_tables" "default_route_table" {
 
 locals {
   create_gateways = {
+    "drg" = var.network.gateways.drg.create
     "internet" = var.input.internet == "ENABLE" ? true : false
     "nat" = var.input.nat == "ENABLE" ? true : false
-    "osn" = var.input.osn != "DISABLE" ? true :false
+    "osn" = var.input.osn != "DISABLE" ? true : false
   }
   gateway_list = compact([
     length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].display_name : null,

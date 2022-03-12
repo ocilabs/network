@@ -14,7 +14,7 @@ resource "oci_core_vcn" "segment" {
 
 resource "oci_core_drg" "segment" {
   depends_on     = [oci_core_vcn.segment]
-  count          = var.network.gateways.drg.create == true ? 1 : 0
+  count          = local.create_gateways.drg ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   display_name   = var.network.gateways.drg.name
   defined_tags   = var.assets.resident.defined_tags
@@ -26,7 +26,7 @@ resource "oci_core_drg_attachment" "segment" {
     oci_core_vcn.segment,
     oci_core_drg.segment
   ]
-  count          = var.network.gateways.drg.create == true ? 1 : 0
+  count          = local.create_gateways.drg ? 1 : 0
   drg_id         = oci_core_drg.segment[0].id
   display_name   = "${var.network.display_name}_attachment"
   # Uncomment to define a static route table assignment, default is an auto-generated dynamic table
@@ -42,7 +42,7 @@ resource "oci_core_drg_attachment" "segment" {
 
 resource "oci_core_internet_gateway" "segment" {
   depends_on     = [oci_core_vcn.segment]
-  count          = var.input.internet == "ENABLE" ? 1 : 0
+  count          = local.create_gateways.internet ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   display_name   = var.network.gateways.internet.name
@@ -54,7 +54,7 @@ resource "oci_core_nat_gateway" "segment" {
   depends_on     = [oci_core_vcn.segment]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
-  count          = var.input.nat == "ENABLE" ? 1 : 0
+  count          = local.create_gateways.nat ? 1 : 0
   display_name   = var.network.gateways.nat.name
   block_traffic  = var.input.nat == "DISABLE" ? true : false
   defined_tags   = var.assets.resident.defined_tags
@@ -65,7 +65,7 @@ resource "oci_core_service_gateway" "segment" {
   depends_on     = [oci_core_vcn.segment]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
-  count          = var.input.osn != "DISABLE" ? 1 : 0
+  count          = local.create_gateways.osn ? 1 : 0
   display_name   = var.network.gateways.osn.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
