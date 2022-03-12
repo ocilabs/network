@@ -73,18 +73,13 @@ locals {
     "osn" = var.input.osn != "DISABLE" ? true :false
   }
   gateway_list = compact([
-    length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].id : null,
-    length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].id : null,
-    length(data.oci_core_nat_gateways.segment) > 0 ? data.oci_core_nat_gateways.segment[0].nat_gateways[0].id : null,
-    length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].id : null
+    length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].display_name : null,
+    length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].display_name : null,
+    length(data.oci_core_nat_gateways.segment) > 0 ? data.oci_core_nat_gateways.segment[0].nat_gateways[0].display_name : null,
+    length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].display_name : null
   ])
   gateway_ids = zipmap(
-    compact([
-      length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].display_name : null,
-      length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].display_name : null,
-      length(data.oci_core_nat_gateways.segment) > 0 ? data.oci_core_nat_gateways.segment[0].nat_gateways[0].display_name : null,
-      length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].display_name : null
-    ]),
+    local.gateway_list,
     compact([
       length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].id : null,
       length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].id : null,
