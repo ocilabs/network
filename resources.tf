@@ -14,8 +14,8 @@ resource "oci_core_vcn" "segment" {
 
 resource "oci_core_drg" "segment" {
   depends_on     = [oci_core_vcn.segment]
-  count          = local.create_gateways.drg ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
+  count          = local.create_gateways.drg ? 1 : 0
   display_name   = var.network.gateways.drg.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
