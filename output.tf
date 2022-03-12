@@ -13,7 +13,7 @@ output "vcn_id" {
 
 output "gateways" {
     description = "A list of gateways for the Virtual Cloud Network (VCN)"
-    value = local.gateways
+    value = local.gateway_ids
 }
 
 output "subnets" {
@@ -27,6 +27,12 @@ output "route_tables" {
     value       = local.route_tables
 }
 // --- Routing ---//
+
+// --- Temp ---//
+output "create_gateways" {
+    value       = local.create_gateways
+}
+// --- Temp ---//
 
 // --- Security ---//
 output "security_lists" {

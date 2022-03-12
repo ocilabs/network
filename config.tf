@@ -67,10 +67,12 @@ data "oci_core_route_tables" "default_route_table" {
 }
 
 locals {
-  create_igw = var.input.internet == "ENABLE" ? true : false
-  create_ngw = var.input.nat == "ENABLE" ? true : false
-  create_sgw = var.input.osn != "DISABLE" ? true :false
-  gateways = zipmap(
+  create_gateways = {
+    "internet" = var.input.internet == "ENABLE" ? true : false
+    "nat" = var.input.nat == "ENABLE" ? true : false
+    "osn" = var.input.osn != "DISABLE" ? true :false
+  }
+  gateway_ids = zipmap(
     compact([
       length(data.oci_core_drgs.segment) > 0 ? data.oci_core_drgs.segment[0].drgs[0].display_name : null,
       length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].display_name : null,
