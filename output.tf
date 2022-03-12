@@ -44,10 +44,3 @@ output "security_groups" {
   value       = length(oci_core_network_security_group.segment) > 0 ? oci_core_network_security_group.segment[*].id : null
 }
 // --- Security ---/*/
-
-
-// --- Temp ---//
-output "gateway_list" {
-  value = local.gateway_list
-}
-// --- Temp ---//
