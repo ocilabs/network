@@ -30,7 +30,7 @@ output "route_tables" {
 
 // --- Temp ---//
 output "create_gateways" {
-    value       = local.create_gateways
+    value       = local.create_gateways.osn
 }
 // --- Temp ---//
 
