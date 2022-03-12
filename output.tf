@@ -54,6 +54,6 @@ output "routes" {
 }
 output "route_tables" {
   description = "A list of route_tables for the Virtual Cloud Network (VCN)"
-  value       = local.route_tables
+  value       = var.network.route_tables
 }
 // --- Temp ---//
