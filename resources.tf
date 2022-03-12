@@ -42,9 +42,9 @@ resource "oci_core_drg_attachment" "segment" {
 
 resource "oci_core_internet_gateway" "segment" {
   depends_on     = [oci_core_vcn.segment]
-  count          = local.create_gateways.internet ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
+  count          = local.create_gateways.internet ? 1 : 0
   display_name   = var.network.gateways.internet.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
@@ -81,9 +81,9 @@ resource "oci_core_route_table" "segment" {
     oci_core_drg.segment,
     oci_core_drg_attachment.segment
   ]
+  compartment_id = data.oci_identity_compartments.network.compartments[0].id
   for_each       = local.route_tables
   display_name   = each.value.display_name
-  compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags

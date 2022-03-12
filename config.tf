@@ -80,9 +80,9 @@ locals {
   }
   gateway_list = compact([
     local.create_gateways.drg ? var.network.gateways.drg.name : null,
-    length(data.oci_core_internet_gateways.segment) > 0 ? data.oci_core_internet_gateways.segment[0].gateways[0].display_name : null,
-    length(data.oci_core_nat_gateways.segment) > 0 ? data.oci_core_nat_gateways.segment[0].nat_gateways[0].display_name : null,
-    length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].display_name : null
+    local.create_gateways.internet ? var.network.gateways.internet.name : null,
+    local.create_gateways.nat ? var.network.gateways.nat.name : null,
+    local.create_gateways.osn ? var.network.gateways.osn.name : null
   ])
   gateway_ids = zipmap(
     local.gateway_list,
