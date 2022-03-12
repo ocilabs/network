@@ -92,6 +92,7 @@ locals {
       length(data.oci_core_service_gateways.segment) > 0 ? data.oci_core_service_gateways.segment[0].service_gateways[0].id : null
     ])
   )
+  route_rules  = {for table, route_rules in var.network.route_tables: table => route_rules} 
   osn_ids = {
     "all"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
@@ -100,7 +101,6 @@ locals {
     "all"     = lookup(data.oci_core_services.all.services[0], "cidr_block")
     "storage" = lookup(data.oci_core_services.storage.services[0], "cidr_block")
   }
-  subnets        = {for network in oci_core_subnet.segment : network.display_name => network.id}
   route_tables   = {for table in oci_core_route_table.segment : table.display_name => table.id}
   security_lists = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
