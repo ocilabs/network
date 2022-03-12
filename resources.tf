@@ -116,5 +116,6 @@ resource "oci_core_subnet" "segment" {
   dns_label      = each.value.dns_label
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
+  route_table_id = each.value.route_table == "default" ? local.route_table_ids["default_route_table"] : local.route_table_ids["${var.network.display_name}_${each.value.route_table}"] 
   security_list_ids = ["${local.security_list_ids[each.value.security_list]}"]
 }
