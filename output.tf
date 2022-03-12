@@ -1,7 +1,7 @@
 # Copyright (c) 2020 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-/*/ --- Resident ---//
+// --- Resident ---//
 output "compartment_id" {
   description = "OCID for the network compartment"
   value = data.oci_identity_compartments.network.compartments[0].id
@@ -28,16 +28,17 @@ output "subnets" {
 // --- Routing ---//
 output "route_tables" {
   description = "A list of route_tables for the Virtual Cloud Network (VCN)"
-  value       = local.route_tables
+  value       = {for table in oci_core_route_table.segment : table.display_name => table.id}
 }
 // --- Routing ---//
 
 // --- Security ---//
 output "security_lists" {
   description = "All security lists defined for the Virtual Cloud Network (VCN)"
-  value       = local.security_lists
+  value       = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
 
+/*
 output "security_groups" {
   description = "Security Group"
   value       = length(oci_core_network_security_group.segment) > 0 ? oci_core_network_security_group.segment[*].id : null
@@ -48,12 +49,5 @@ output "security_groups" {
 // --- Temp ---//
 output "gateway_list" {
   value = local.gateway_list
-}
-output "routes" {
-  value = local.routes
-}
-output "route_tables" {
-  description = "A list of route_tables for the Virtual Cloud Network (VCN)"
-  value       = var.network.route_tables
 }
 // --- Temp ---//

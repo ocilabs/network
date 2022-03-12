@@ -81,7 +81,7 @@ resource "oci_core_route_table" "segment" {
     oci_core_drg.segment,
     oci_core_drg_attachment.segment
   ]
-  for_each       = var.network.route_tables
+  for_each       = local.route_tables
   display_name   = each.value.display_name
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
@@ -116,6 +116,5 @@ resource "oci_core_subnet" "segment" {
   dns_label      = each.value.dns_label
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
-  #route_table_id = local.route_tables[each.value.route_table]
   security_list_ids = ["${local.security_lists[each.value.security_list]}"]
 }
