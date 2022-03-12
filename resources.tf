@@ -116,5 +116,5 @@ resource "oci_core_subnet" "segment" {
   dns_label      = each.value.dns_label
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
-  security_list_ids = ["${local.security_lists[each.value.security_list]}"]
+  security_list_ids = ["${local.security_list_ids[each.value.security_list]}"]
 }

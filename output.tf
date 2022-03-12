@@ -28,14 +28,14 @@ output "subnet_ids" {
 // --- Routing ---//
 output "route_table_ids" {
   description = "A list of route_tables for the Virtual Cloud Network (VCN)"
-  value       = {for table in oci_core_route_table.segment : table.display_name => table.id}
+  value       = local.route_table_ids
 }
 // --- Routing ---//
 
 // --- Security ---//
 output "security_list_ids" {
   description = "All security lists defined for the Virtual Cloud Network (VCN)"
-  value       = {for list in oci_core_security_list.segment : list.display_name => list.id}
+  value       = local.security_list_ids
 }
 
 /*
@@ -44,3 +44,9 @@ output "security_groups" {
   value       = length(oci_core_network_security_group.segment) > 0 ? oci_core_network_security_group.segment[*].id : null
 }
 // --- Security ---/*/
+
+// --- Temp ---//
+output "default_route_table" {
+  value = data.oci_core_route_tables.default_route_table
+}
+// --- Temp ---//

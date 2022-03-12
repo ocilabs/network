@@ -61,9 +61,14 @@ data "oci_core_service_gateways" "segment" {
 data "oci_core_route_tables" "default_route_table" {
   depends_on     = [oci_core_vcn.segment]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  display_name   = "Default Route Table for organization_service_dev_1" 
+  #display_name   = "Default Route Table for organization_service_dev_1" 
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
+  filter {
+    name   = "display_name"
+    values = ["Default Route Table for .*"]
+    regex  = true
+  }
 }
 
 locals {
@@ -101,7 +106,8 @@ locals {
     "all"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
   }
-  security_lists = {for list in oci_core_security_list.segment : list.display_name => list.id}
+  route_table_ids   = {for table in oci_core_route_table.segment : table.display_name => table.id}
+  security_list_ids = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
 
 // Define the wait state for the data requests
