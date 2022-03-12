@@ -14,26 +14,26 @@ output "vcn_id" {
   value       = length(oci_core_vcn.segment) > 0 ? oci_core_vcn.segment.id : null
 }
 
-output "gateways" {
+output "gateway_ids" {
   description = "A list of gateways for the Virtual Cloud Network (VCN)"
   value = local.gateway_ids
 }
 
-output "subnets" {
+output "subnet_ids" {
   description = "A list of subnets for the Virtual Cloud Network (VCN)"
   value       = {for network in oci_core_subnet.segment : network.display_name => network.id}
 }
 // --- Network Topology ---//
 
 // --- Routing ---//
-output "route_tables" {
+output "route_table_ids" {
   description = "A list of route_tables for the Virtual Cloud Network (VCN)"
   value       = {for table in oci_core_route_table.segment : table.display_name => table.id}
 }
 // --- Routing ---//
 
 // --- Security ---//
-output "security_lists" {
+output "security_list_ids" {
   description = "All security lists defined for the Virtual Cloud Network (VCN)"
   value       = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
