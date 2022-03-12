@@ -34,6 +34,18 @@ output "security_lists" {
     value       = local.route_tables
 }
 
+// --- Temp ---//
+output "create_igw" {
+    value       = local.create_igw
+}
+output "create_sgw" {
+    value       = local.create_sgw
+}
+output "create_ngw" {
+    value       = local.create_ngw
+}
+// --- Routing ---//
+
 /*
 output "security_groups" {
     description = "Security Group"
