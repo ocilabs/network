@@ -1,6 +1,6 @@
 ## Requirements
 
-No requirements.
+`https://github.com/ocilabs/`
 
 ## Providers
 
@@ -22,8 +22,8 @@ module "network" {
   resident  = module.configuration.resident
   network   = module.configuration.network[each.key]
   input = {
-    internet = var.internet
-    nat      = var.nat
+    internet = var.internet == "PUBLIC" ? "ENABLE" : "DISABLE"
+    nat      = var.nat == true ? "ENABLE" : "DISABLE"
     ipv6     = var.ipv6
     osn      = var.osn
   }
@@ -32,9 +32,7 @@ module "network" {
   }
 }
 output "network" {
-  value = {
-    for resource, parameter in module.network : resource => parameter
-    }
+  value = {for resource, parameter in module.network : resource => parameter}
 }
 // --- network configuration --- //
 ```
