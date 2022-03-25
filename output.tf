@@ -45,5 +45,7 @@ output "security_group_ids" {
 // --- Security ---//
 
 output "route_table_names" {
-  value = var.network.subnets
+  value = [for subnet in var.network.subnets: {
+    subnet.display_name = subnet.route_table
+  }]
 }
