@@ -118,7 +118,7 @@ resource "oci_core_default_route_table" "segment" {
   route_rules {
     network_entity_id = oci_core_internet_gateway.segment[0].id
     destination       = "0.0.0.0/0"
-    description       = "Routes all traffic via the internet gateway."
+    description       = "Routes all traffic to the internet."
   }
 }
 
