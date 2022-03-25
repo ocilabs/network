@@ -43,3 +43,9 @@ output "security_group_ids" {
   value       = {for group in oci_core_network_security_group.segment : group.display_name => group.id}
 }
 // --- Security ---//
+
+output "z_rts" {
+  value = {for subnet in local.subnets : subnet.name => {
+      route_table   = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${subnet.route_table}_route"
+    } if contains(var.resolve.topologies, subnet.topology)}
+}
