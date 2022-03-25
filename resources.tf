@@ -116,7 +116,7 @@ resource "oci_core_default_route_table" "segment" {
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
   route_rules {
-    network_entity_id = oci_core_internet_gateway.segment.id
+    network_entity_id = oci_core_internet_gateway.segment[0].id
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR"
     description       = "Default anywhere route"
