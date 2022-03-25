@@ -46,6 +46,6 @@ output "security_group_ids" {
 
 output "z_rts" {
   value = {for subnet in local.subnets : subnet.name => {
-      route_table   = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${subnet.route_table}_route"
+      route_table   = "${local.service_name}_${index(local.vcn_list, "core") + 1}_${subnet.route_table}_route"
     } if contains(var.resolve.topologies, subnet.topology)}
 }
