@@ -40,12 +40,14 @@ output "security_list_ids" {
 
 output "security_group_ids" {
   description = "Security Group"
-  value       = {for group in oci_core_network_security_group.segment : group.display_name => group.id}
+  value       = {
+    for group in oci_core_network_security_group.segment : group.display_name => group.id
+  }
 }
 // --- Security ---//
 
 output "route_table_names" {
-  value = [for subnet in var.network.subnets: {
-    subnet.display_name = subnet.route_table
-  }]
+  value = {
+    for subnet in var.network.subnets: subnet.display_name => subnet.route_table
+  }
 }
