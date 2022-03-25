@@ -45,5 +45,5 @@ output "security_group_ids" {
 // --- Security ---//
 
 output "route_table_names" {
-  value = var.input.subnets
+  value = var.network.subnets
 }
