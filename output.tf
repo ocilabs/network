@@ -43,3 +43,12 @@ output "security_group_ids" {
   value       = {for group in oci_core_network_security_group.segment : group.display_name => group.id}
 }
 // --- Security ---//
+
+// --- Security ---//
+output "create_internet" {
+  value = local.create_gateways.internet
+}
+output "create_nat" {
+  value = local.create_gateways.nat
+}
+// --- Security ---//
