@@ -43,7 +43,3 @@ output "security_group_ids" {
   value       = {for group in oci_core_network_security_group.segment : group.display_name => group.id}
 }
 // --- Security ---//
-
-output "route_table_ids" {
-  value = local.route_table_ids
-}
