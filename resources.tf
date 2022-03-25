@@ -104,6 +104,25 @@ resource "oci_core_route_table" "segment" {
   }
 }
 
+resource "oci_core_default_route_table" "segment" {
+  depends_on     = [
+    oci_core_vcn.segment,
+    oci_core_drg.segment,
+    oci_core_drg_attachment.segment
+  ]
+  manage_default_resource_id = oci_core_vcn.segment.default_route_table_id
+  compartment_id = data.oci_identity_compartments.network.compartments[0].id
+  vcn_id         = oci_core_vcn.segment.id
+  defined_tags   = var.assets.resident.defined_tags
+  freeform_tags  = var.assets.resident.freeform_tags
+  route_rules {
+    network_entity_id = oci_core_internet_gateway.segment.id
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR"
+    description       = "Default anywhere route"
+  }
+}
+
 resource "oci_core_subnet" "segment" {
   depends_on                 = [
     oci_core_default_security_list.default_security_list,
