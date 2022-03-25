@@ -46,6 +46,7 @@ output "security_group_ids" {
 
 output "z_rts" {
   value = {for subnet in var.input.subnets : 
-    subnet.name => subnet.local.route_table_ids[each.value.route_table]
+    #subnet.name => local.route_table_ids[subnet.route_table]
+    subnet.name => subnet.route_table
   }
 }
