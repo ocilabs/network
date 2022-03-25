@@ -46,9 +46,9 @@ output "security_group_ids" {
 
 // --- Security ---//
 output "create_internet" {
-  value = local.create_gateways.internet
+  value = var.input.internet
 }
 output "create_nat" {
-  value = local.create_gateways.nat
+  value = var.input.nat
 }
 // --- Security ---//
