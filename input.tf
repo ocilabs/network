@@ -48,18 +48,18 @@ variable "resident" {
 
 variable "network" {
   type = object({
-    name         = string,
-    region       = string,
-    display_name = string,
-    dns_label    = string,
-    compartment  = string,
-    stage        = number,
-    cidr         = string,
-    gateways     = any,
-    subnets      = map(any),
-    route_table_input = list(any),
-    security_groups   = map(any)
-    security_lists    = any
+    cidr            = string,
+    compartment     = string,
+    display_name    = string,
+    dns_label       = string,
+    gateways        = any,
+    name            = string,
+    region          = string,
+    route_tables    = map(any),
+    security_groups = map(any),
+    security_lists  = any
+    stage           = number,
+    subnets         = map(any)
   })
   description = "Network Configuration"
 }

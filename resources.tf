@@ -82,7 +82,7 @@ resource "oci_core_route_table" "segment" {
     oci_core_drg_attachment.segment
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  for_each       = local.route_tables
+  for_each       = var.network.route_tables
   display_name   = each.value.display_name
   vcn_id         = oci_core_vcn.segment.id
   defined_tags   = var.assets.resident.defined_tags

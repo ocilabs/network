@@ -96,15 +96,6 @@ locals {
     "all"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
   }
-  route_tables = {for route in var.network.route_table_input: route.name => {
-    display_name = route.display_name
-    route_rules  = {for name, cidr in route.destinations: name => {
-        network_entity   = route.gateway_name
-        destination      = cidr
-        destination_type = route.gateway == "osn" ? "SERVICE_CIDR_BLOCK" : "CIDR_BLOCK"
-        description      = "Routes ${route.name} traffic via the ${route.gateway} gateway."
-    }} 
-  }if contains(local.gateway_list, route.gateway_name)}
   route_table_ids   = merge(
     {for table in oci_core_route_table.segment : table.display_name => table.id}, 
     {"${var.network.display_name}_default_route" = data.oci_core_route_tables.default.route_tables[0].id}
