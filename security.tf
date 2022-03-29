@@ -90,6 +90,7 @@ resource "oci_core_security_list" "segment" {
     for_each = [for profile in each.value.ingress: {
       protocol    = profile.protocol
       source      = profile.source
+      source_type = profile.source_type
       stateless   = profile.stateless
       description = profile.description
       min_port    = profile.min_port
@@ -98,6 +99,7 @@ resource "oci_core_security_list" "segment" {
     content {
       protocol    = ingress_security_rules.value.protocol
       source      = ingress_security_rules.value.source
+      source_type = ingress_security_rules.value.source_type
       stateless   = ingress_security_rules.value.stateless
       description = ingress_security_rules.value.description
       tcp_options {
