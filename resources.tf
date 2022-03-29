@@ -111,17 +111,12 @@ resource "oci_core_default_route_table" "segment" {
     oci_core_drg_attachment.segment
   ]
   manage_default_resource_id = oci_core_vcn.segment.default_route_table_id
-  route_rules = [{
+  route_rules {
     network_entity_id = local.create_gateways.internet ? oci_core_internet_gateway.segment[0].id : oci_core_drg.segment[0].id
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
     description       = "Routes all traffic to the internet."
-  },{
-    network_entity_id = oci_core_service_gateway.segment[0].id
-    destination       = data.oci_core_services.all
-    destination_type  = "SERVICE_CIDR_BLOCK"
-    description       = "Routes traffic to the Oracle Service Network."
-  }]
+    }
 }
 
 resource "oci_core_subnet" "segment" {
