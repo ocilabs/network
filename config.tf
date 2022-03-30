@@ -90,7 +90,7 @@ locals {
     local.create_gateways.drg ? var.network.gateways.drg.name : null,
     local.create_gateways.internet ? var.network.gateways.internet.name : null,
     local.create_gateways.nat ? var.network.gateways.nat.name : null,
-    local.create_gateways.osn ? var.network.gateways.osn.name : null
+    local.create_gateways.service ? var.network.gateways.service.name : null
   ])
   osn_ids = {
     "osn"     = lookup(data.oci_core_services.all.services[0], "id")
