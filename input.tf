@@ -54,6 +54,7 @@ variable "network" {
     dns_label       = string,
     gateways        = any,
     name            = string,
+    prohibit_internet_ingress = bool,
     region          = string,
     route_tables    = map(any),
     security_groups = map(any),

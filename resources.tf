@@ -128,13 +128,14 @@ resource "oci_core_subnet" "segment" {
     oci_core_nat_gateway.segment
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  vcn_id         = oci_core_vcn.segment.id
   for_each       = var.network.subnets
   cidr_block     = each.value.cidr_block
   display_name   = each.value.display_name
-  dns_label      = each.value.dns_label
   defined_tags   = var.assets.resident.defined_tags
+  dns_label      = each.value.dns_label
   freeform_tags  = var.assets.resident.freeform_tags
+  prohibit_internet_ingress = each.value.prohibit_internet_ingress
   route_table_id = local.route_table_ids[each.value.route_table] 
   security_list_ids = ["${local.security_list_ids[each.value.security_list]}"]
+  vcn_id         = oci_core_vcn.segment.id
 }
