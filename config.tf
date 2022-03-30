@@ -72,10 +72,10 @@ data "oci_core_route_tables" "default" {
 
 locals {
   create_gateways = {
-    "drg" = var.network.gateways.drg.create
+    "drg"      = var.network.gateways.drg.create
     "internet" = var.input.internet == "ENABLE" ? true : false
-    "nat" = var.input.nat == "ENABLE" ? true : false
-    "osn" = var.input.osn != "DISABLE" ? true : false
+    "nat"      = var.input.nat == "ENABLE" ? true : false
+    "service"  = var.input.osn != "DISABLE" ? true : false
   }
   gateway_ids = zipmap(
     local.gateway_list,
