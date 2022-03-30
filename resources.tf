@@ -66,12 +66,12 @@ resource "oci_core_service_gateway" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   count          = local.create_gateways.service ? 1 : 0
-  display_name   = var.network.gateways.osn.name
+  display_name   = var.network.gateways.service.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
   services {
     #Required
-    service_id = local.osn_ids[var.network.gateways.osn.services]
+    service_id = local.osn_ids[var.network.gateways.service.scope]
   }
 }
 
