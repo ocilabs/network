@@ -93,7 +93,7 @@ locals {
     local.create_gateways.osn ? var.network.gateways.osn.name : null
   ])
   osn_ids = {
-    "all"     = lookup(data.oci_core_services.all.services[0], "id")
+    "osn"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
   }
   route_table_ids   = merge(
