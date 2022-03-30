@@ -5,7 +5,7 @@
 resource "oci_core_default_security_list" "default_security_list" {
   manage_default_resource_id = oci_core_vcn.segment.default_security_list_id
   egress_security_rules {
-    protocol         = "6" // tcp
+    protocol         = "all"
     destination      = "all-${lower(var.resident.region.key)}-services-in-oracle-services-network"
     destination_type = "SERVICE_CIDR_BLOCK"
     stateless        = false
@@ -46,7 +46,7 @@ resource "oci_core_security_list" "segment" {
   }
   // allow outbound tcp traffic to oracle service network
   egress_security_rules {
-    protocol         = "6" // tcp
+    protocol         = "all"
     destination      = "all-${lower(var.resident.region.key)}-services-in-oracle-services-network"
     destination_type = "SERVICE_CIDR_BLOCK"
     stateless        = false
@@ -66,7 +66,7 @@ resource "oci_core_security_list" "segment" {
   // allow inbound tcp traffic from other internal segments
   ingress_security_rules {
     protocol    = 1
-    source      = "10.0.0.0/8"
+    source      = "10.0.0.0/16"
     stateless   = false
     description = "allow internal icmp traffic"
   }
