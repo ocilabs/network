@@ -14,16 +14,16 @@ resource "oci_core_default_security_list" "default_security_list" {
   ingress_security_rules {
     protocol  = "1"
     stateless = false
-    source    = var.network.cidr
+    source    = var.network.gateways.drg.anywhere
     icmp_options {
       type = 3
       code = 4
-  }
+    }
   }
   ingress_security_rules {
     protocol  = "1"
     stateless = false
-    source    = var.network.gateways.drg.anywhere
+    source    = var.network.cidr
     icmp_options {
       type = 3
       code = null
@@ -54,30 +54,17 @@ resource "oci_core_security_list" "segment" {
     icmp_options {
       type = 3
       code = 4
+    }
   }
-  }
-  // allow inbound tcp traffic from other internal segments
   ingress_security_rules {
-    protocol    = 1
-    source      = "10.0.0.0/16"
-    stateless   = false
-    description = "allow internal icmp traffic"
+    protocol  = "1"
+    stateless = false
+    source    = var.network.cidr
+    icmp_options {
+      type = 3
+      code = null
+    }
   }
-  // allow inbound tcp traffic from oracle service segments
-  ingress_security_rules {
-    protocol    = 1
-    source      = "172.16.0.0/12"
-    stateless   = false
-    description = "allow internal icmp traffic"
-  }
-
-  ingress_security_rules {
-    protocol    = 1
-    source      = "192.168.0.0/16"
-    stateless   = false
-    description = "allow internal icmp traffic"
-  }
-
   // allow defined inbound tcp traffic
   dynamic "ingress_security_rules" {
     for_each = [for profile in each.value.ingress: {
