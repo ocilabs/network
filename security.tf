@@ -34,7 +34,10 @@ resource "oci_core_default_security_list" "default_security_list" {
 resource "oci_core_security_list" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
-  for_each       = var.network.security_lists
+  for_each       = {
+    for filter in var.network.security_lists : filter.display_name => filter
+    if  filter.stage <= var.resident.stage
+  }
   display_name   = each.value.display_name
 
   // allow all outbound traffic to other network segments

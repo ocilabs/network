@@ -82,7 +82,10 @@ resource "oci_core_route_table" "segment" {
     oci_core_drg_attachment.segment
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  for_each       = var.network.route_tables
+  for_each       = {
+    for table in var.network.route_tables : table.display_name => table
+    if  table.stage <= var.resident.stage
+  }
   display_name   = each.value.display_name
   vcn_id         = oci_core_vcn.segment.id
   defined_tags   = var.assets.resident.defined_tags
@@ -128,7 +131,10 @@ resource "oci_core_subnet" "segment" {
     oci_core_nat_gateway.segment
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  for_each       = var.network.subnets
+  for_each       = {
+    for subnet in var.network.subnets : subnet.display_name => subnet
+    if  subnet.stage <= var.resident.stage
+  }
   cidr_block     = each.value.cidr_block
   display_name   = each.value.display_name
   defined_tags   = var.assets.resident.defined_tags
