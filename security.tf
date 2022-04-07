@@ -35,8 +35,8 @@ resource "oci_core_security_list" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   for_each       = {
-    for filter in var.network.security_lists : filter.display_name => filter
-    if  filter.stage <= var.resident.stage
+    for profile in var.network.security_lists : profile.display_name => profile
+    if  profile.stage <= var.resident.stage
   }
   display_name   = each.value.display_name
 
@@ -70,14 +70,14 @@ resource "oci_core_security_list" "segment" {
   }
   // allow defined inbound tcp traffic
   dynamic "ingress_security_rules" {
-    for_each = [for profile in each.value.ingress: {
-      protocol    = profile.protocol
-      source      = profile.source
-      source_type = profile.source_type
-      stateless   = profile.stateless
-      description = profile.description
-      min_port    = profile.min_port
-      max_port    = profile.max_port
+    for_each = [for application in each.value.ingress: {
+      protocol    = application.protocol
+      source      = application.source
+      source_type = application.source_type
+      stateless   = application.stateless
+      description = application.description
+      min_port    = application.min_port
+      max_port    = application.max_port
     }]
     content {
       protocol    = ingress_security_rules.value.protocol
