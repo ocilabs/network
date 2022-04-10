@@ -14,7 +14,7 @@ resource "oci_core_default_security_list" "default_security_list" {
   ingress_security_rules {
     protocol  = "1"
     stateless = false
-    source    = var.network.gateways.drg.anywhere
+    source    = var.input.network.gateways.drg.anywhere
     icmp_options {
       type = 3
       code = 4
@@ -23,7 +23,7 @@ resource "oci_core_default_security_list" "default_security_list" {
   ingress_security_rules {
     protocol  = "1"
     stateless = false
-    source    = var.network.cidr
+    source    = var.input.network.cidr
     icmp_options {
       type = 3
       code = null
@@ -35,8 +35,8 @@ resource "oci_core_security_list" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   for_each       = {
-    for profile in var.network.security_lists : profile.display_name => profile
-    if  profile.stage <= var.resident.stage
+    for profile in var.input.network.security_lists : profile.display_name => profile
+    if  profile.stage <= var.input.service.stage
   }
   display_name   = each.value.display_name
 
@@ -51,7 +51,7 @@ resource "oci_core_security_list" "segment" {
   // allow inbound icmp traffic
   ingress_security_rules {
     protocol    = 1
-    source      = var.network.gateways.drg.anywhere
+    source      = var.input.network.gateways.drg.anywhere
     stateless   = false
     description = "allow internal icmp traffic"
     icmp_options {
@@ -62,7 +62,7 @@ resource "oci_core_security_list" "segment" {
   ingress_security_rules {
     protocol  = "1"
     stateless = false
-    source    = var.network.cidr
+    source    = var.input.network.cidr
     icmp_options {
       type = 3
       code = null
@@ -98,7 +98,7 @@ resource "oci_core_network_security_group" "segment" {
   depends_on     = [oci_core_vcn.segment]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
-  for_each       = var.network.security_groups
+  for_each       = var.input.network.security_groups
   display_name   = each.value.display_name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
