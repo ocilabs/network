@@ -85,7 +85,7 @@ resource "oci_core_security_list" "segment" {
       source_type = ingress_security_rules.value.source_type
       stateless   = ingress_security_rules.value.stateless
       description = ingress_security_rules.value.description
-      tcp_config {
+      tcp_options {
         min  = ingress_security_rules.value.min_port
         max  = ingress_security_rules.value.max_port
       }
