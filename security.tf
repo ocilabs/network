@@ -15,7 +15,7 @@ resource "oci_core_default_security_list" "default_security_list" {
     protocol  = "1"
     stateless = false
     source    = var.input.network.gateways.drg.anywhere
-    icmp_options {
+    icmp_config {
       type = 3
       code = 4
     }
@@ -24,7 +24,7 @@ resource "oci_core_default_security_list" "default_security_list" {
     protocol  = "1"
     stateless = false
     source    = var.input.network.cidr
-    icmp_options {
+    icmp_config {
       type = 3
       code = null
     }
@@ -54,7 +54,7 @@ resource "oci_core_security_list" "segment" {
     source      = var.input.network.gateways.drg.anywhere
     stateless   = false
     description = "allow internal icmp traffic"
-    icmp_options {
+    icmp_config {
       type = 3
       code = 4
     }
@@ -63,7 +63,7 @@ resource "oci_core_security_list" "segment" {
     protocol  = "1"
     stateless = false
     source    = var.input.network.cidr
-    icmp_options {
+    icmp_config {
       type = 3
       code = null
     }
@@ -85,7 +85,7 @@ resource "oci_core_security_list" "segment" {
       source_type = ingress_security_rules.value.source_type
       stateless   = ingress_security_rules.value.stateless
       description = ingress_security_rules.value.description
-      tcp_options {
+      tcp_config {
         min  = ingress_security_rules.value.min_port
         max  = ingress_security_rules.value.max_port
       }

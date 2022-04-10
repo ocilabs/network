@@ -7,7 +7,7 @@ resource "oci_core_vcn" "segment" {
   display_name   = var.input.network.display_name
   dns_label      = var.input.network.dns_label
   cidr_block     = var.input.network.cidr
-  is_ipv6enabled = var.options.ipv6
+  is_ipv6enabled = var.config.ipv6
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
 }
@@ -56,7 +56,7 @@ resource "oci_core_nat_gateway" "segment" {
   vcn_id         = oci_core_vcn.segment.id
   count          = local.create_gateways.nat ? 1 : 0
   display_name   = var.input.network.gateways.nat.name
-  block_traffic  = var.options.nat == "DISABLE" ? true : false
+  block_traffic  = var.config.nat == "DISABLE" ? true : false
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
 }

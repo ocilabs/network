@@ -37,7 +37,7 @@ data "oci_core_drgs" "segment" {
 }
 data "oci_core_internet_gateways" "segment" {
   depends_on = [oci_core_internet_gateway.segment]
-  count          = var.options.internet == "ENABLE" ? 1 : 0
+  count          = var.config.internet == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   display_name   = var.input.network.gateways.internet.name
   state          = "AVAILABLE"
@@ -45,7 +45,7 @@ data "oci_core_internet_gateways" "segment" {
 }
 data "oci_core_nat_gateways" "segment" {
   depends_on = [oci_core_nat_gateway.segment]
-  count          = var.options.nat == "ENABLE" ? 1 : 0
+  count          = var.config.nat == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   display_name   = var.input.network.gateways.nat.name
   state          = "AVAILABLE"
@@ -53,7 +53,7 @@ data "oci_core_nat_gateways" "segment" {
 }
 data "oci_core_service_gateways" "segment" {
   depends_on = [oci_core_service_gateway.segment]
-  count          = var.options.osn != "DISABLE" ? 1 : 0
+  count          = var.config.osn != "DISABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
@@ -73,9 +73,9 @@ data "oci_core_route_tables" "default" {
 locals {
   create_gateways = {
     "drg"      = var.input.network.gateways.drg.create
-    "internet" = var.options.internet == "ENABLE" ? true : false
-    "nat"      = var.options.nat == "ENABLE" ? true : false
-    "service"  = var.options.osn != "DISABLE" ? true : false
+    "internet" = var.config.internet == "ENABLE" ? true : false
+    "nat"      = var.config.nat == "ENABLE" ? true : false
+    "service"  = var.config.osn != "DISABLE" ? true : false
   }
   gateway_ids = zipmap(
     local.gateway_list,
