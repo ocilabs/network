@@ -15,7 +15,7 @@ resource "oci_core_default_security_list" "default_security_list" {
     protocol  = "1"
     stateless = false
     source    = var.input.network.gateways.drg.anywhere
-    icmp_config {
+    icmp_options {
       type = 3
       code = 4
     }
@@ -24,7 +24,7 @@ resource "oci_core_default_security_list" "default_security_list" {
     protocol  = "1"
     stateless = false
     source    = var.input.network.cidr
-    icmp_config {
+    icmp_options {
       type = 3
       code = null
     }
@@ -54,7 +54,7 @@ resource "oci_core_security_list" "segment" {
     source      = var.input.network.gateways.drg.anywhere
     stateless   = false
     description = "allow internal icmp traffic"
-    icmp_config {
+    icmp_options {
       type = 3
       code = 4
     }
