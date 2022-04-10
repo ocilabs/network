@@ -63,7 +63,7 @@ resource "oci_core_security_list" "segment" {
     protocol  = "1"
     stateless = false
     source    = var.input.network.cidr
-    icmp_config {
+    icmp_options {
       type = 3
       code = null
     }
