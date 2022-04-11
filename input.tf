@@ -11,7 +11,7 @@ variable "schema" {
   description = "Input for database module"
 }
 
-variable "input" {
+variable "config" {
   type = object({
     tenancy = any,
     service = any,

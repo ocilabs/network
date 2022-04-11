@@ -24,22 +24,22 @@ data "oci_core_services" "storage" {
   }
 }
 data "oci_identity_compartments" "network" {
-  compartment_id = var.input.tenancy.id
+  compartment_id = var.config.tenancy.id
   access_level   = "ANY"
   compartment_id_in_subtree = true
-  name           = try(var.input.network.compartment, var.input.service.name)
+  name           = try(var.config.network.compartment, var.config.service.name)
   state          = "ACTIVE"
 }
 data "oci_core_drgs" "segment" {
   depends_on = [oci_core_drg.segment]
-  count          = var.input.network.gateways.drg.create == true ? 1 : 0
+  count          = var.config.network.gateways.drg.create == true ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
 }
 data "oci_core_internet_gateways" "segment" {
   depends_on = [oci_core_internet_gateway.segment]
   count          = var.schema.internet == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  display_name   = var.input.network.gateways.internet.name
+  display_name   = var.config.network.gateways.internet.name
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
 }
@@ -47,7 +47,7 @@ data "oci_core_nat_gateways" "segment" {
   depends_on = [oci_core_nat_gateway.segment]
   count          = var.schema.nat == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  display_name   = var.input.network.gateways.nat.name
+  display_name   = var.config.network.gateways.nat.name
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
 }
@@ -72,7 +72,7 @@ data "oci_core_route_tables" "default" {
 
 locals {
   create_gateways = {
-    "drg"      = var.input.network.gateways.drg.create
+    "drg"      = var.config.network.gateways.drg.create
     "internet" = var.schema.internet == "ENABLE" ? true : false
     "nat"      = var.schema.nat == "ENABLE" ? true : false
     "service"  = var.schema.osn != "DISABLE" ? true : false
@@ -87,10 +87,10 @@ locals {
     ])
   )
   gateway_list = compact([
-    local.create_gateways.drg ? var.input.network.gateways.drg.name : null,
-    local.create_gateways.internet ? var.input.network.gateways.internet.name : null,
-    local.create_gateways.nat ? var.input.network.gateways.nat.name : null,
-    local.create_gateways.service ? var.input.network.gateways.service.name : null
+    local.create_gateways.drg ? var.config.network.gateways.drg.name : null,
+    local.create_gateways.internet ? var.config.network.gateways.internet.name : null,
+    local.create_gateways.nat ? var.config.network.gateways.nat.name : null,
+    local.create_gateways.service ? var.config.network.gateways.service.name : null
   ])
   osn_ids = {
     "osn"     = lookup(data.oci_core_services.all.services[0], "id")
@@ -98,7 +98,7 @@ locals {
   }
   route_table_ids   = merge(
     {for table in oci_core_route_table.segment : table.display_name => table.id}, 
-    {"${var.input.network.display_name}_default_table" = data.oci_core_route_tables.default.route_tables[0].id}
+    {"${var.config.network.display_name}_default_table" = data.oci_core_route_tables.default.route_tables[0].id}
   )
   security_list_ids = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }

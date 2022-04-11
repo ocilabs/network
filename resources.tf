@@ -4,9 +4,9 @@
 
 resource "oci_core_vcn" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  display_name   = var.input.network.display_name
-  dns_label      = var.input.network.dns_label
-  cidr_block     = var.input.network.cidr
+  display_name   = var.config.network.display_name
+  dns_label      = var.config.network.dns_label
+  cidr_block     = var.config.network.cidr
   is_ipv6enabled = var.schema.ipv6
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
@@ -16,7 +16,7 @@ resource "oci_core_drg" "segment" {
   depends_on     = [oci_core_vcn.segment]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   count          = local.create_gateways.drg ? 1 : 0
-  display_name   = var.input.network.gateways.drg.name
+  display_name   = var.config.network.gateways.drg.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
 }
@@ -28,13 +28,13 @@ resource "oci_core_drg_attachment" "segment" {
   ]
   count          = local.create_gateways.drg ? 1 : 0
   drg_id         = oci_core_drg.segment[0].id
-  display_name   = "${var.input.network.display_name}_attachment"
+  display_name   = "${var.config.network.display_name}_attachment"
   # Uncomment to define a static route table assignment, default is an auto-generated dynamic table
   # drg_route_table_id = oci_core_drg_route_table.segment_route.id
 
   network_details {
     id         = oci_core_vcn.segment.id
-    type       = var.input.network.gateways.drg.type
+    type       = var.config.network.gateways.drg.type
     # Uncomment to define a transit route target, per default transits should be defined on the DRG itself
     # route_table_id = oci_core_route_table.route_table.id
   }
@@ -45,7 +45,7 @@ resource "oci_core_internet_gateway" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   count          = local.create_gateways.internet ? 1 : 0
-  display_name   = var.input.network.gateways.internet.name
+  display_name   = var.config.network.gateways.internet.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
 }
@@ -55,7 +55,7 @@ resource "oci_core_nat_gateway" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   count          = local.create_gateways.nat ? 1 : 0
-  display_name   = var.input.network.gateways.nat.name
+  display_name   = var.config.network.gateways.nat.name
   block_traffic  = var.schema.nat == "DISABLE" ? true : false
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
@@ -66,12 +66,12 @@ resource "oci_core_service_gateway" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   vcn_id         = oci_core_vcn.segment.id
   count          = local.create_gateways.service ? 1 : 0
-  display_name   = var.input.network.gateways.service.name
+  display_name   = var.config.network.gateways.service.name
   defined_tags   = var.assets.resident.defined_tags
   freeform_tags  = var.assets.resident.freeform_tags
   services {
     #Required
-    service_id = local.osn_ids[var.input.network.gateways.service.scope]
+    service_id = local.osn_ids[var.config.network.gateways.service.scope]
   }
 }
 
@@ -83,8 +83,8 @@ resource "oci_core_route_table" "segment" {
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   for_each       = {
-    for table in var.input.network.route_tables : table.display_name => table
-    if  table.stage <= var.input.service.stage
+    for table in var.config.network.route_tables : table.display_name => table
+    if  table.stage <= var.config.service.stage
   }
   display_name   = each.value.display_name
   vcn_id         = oci_core_vcn.segment.id
@@ -132,8 +132,8 @@ resource "oci_core_subnet" "segment" {
   ]
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   for_each       = {
-    for subnet in var.input.network.subnets : subnet.display_name => subnet
-    if  subnet.stage <= var.input.service.stage
+    for subnet in var.config.network.subnets : subnet.display_name => subnet
+    if  subnet.stage <= var.config.service.stage
   }
   cidr_block     = each.value.cidr_block
   display_name   = each.value.display_name
