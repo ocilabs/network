@@ -36,7 +36,7 @@ resource "oci_core_security_list" "segment" {
   vcn_id         = oci_core_vcn.segment.id
   for_each       = {
     for profile in var.configuration.network.security_lists : profile.display_name => profile
-    if  profile.stage <= var.configuration.service.stage
+    if  profile.stage <= var.configuration.resident.stage
   }
   display_name   = each.value.display_name
 

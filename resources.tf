@@ -84,7 +84,7 @@ resource "oci_core_route_table" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   for_each       = {
     for table in var.configuration.network.route_tables : table.display_name => table
-    if  table.stage <= var.configuration.service.stage
+    if  table.stage <= var.configuration.resident.stage
   }
   display_name   = each.value.display_name
   vcn_id         = oci_core_vcn.segment.id
@@ -133,7 +133,7 @@ resource "oci_core_subnet" "segment" {
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   for_each       = {
     for subnet in var.configuration.network.subnets : subnet.display_name => subnet
-    if  subnet.stage <= var.configuration.service.stage
+    if  subnet.stage <= var.configuration.resident.stage
   }
   cidr_block     = each.value.cidr_block
   display_name   = each.value.display_name

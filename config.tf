@@ -27,7 +27,7 @@ data "oci_identity_compartments" "network" {
   compartment_id = var.configuration.tenancy.id
   access_level   = "ANY"
   compartment_id_in_subtree = true
-  name           = try(var.configuration.network.compartment, var.configuration.service.name)
+  name           = try(var.configuration.network.compartment, var.configuration.resident.name)
   state          = "ACTIVE"
 }
 data "oci_core_drgs" "segment" {
