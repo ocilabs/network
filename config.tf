@@ -24,36 +24,36 @@ data "oci_core_services" "storage" {
   }
 }
 data "oci_identity_compartments" "network" {
-  compartment_id = var.config.tenancy.id
+  compartment_id = var.configuration.tenancy.id
   access_level   = "ANY"
   compartment_id_in_subtree = true
-  name           = try(var.config.network.compartment, var.config.service.name)
+  name           = try(var.configuration.network.compartment, var.configuration.service.name)
   state          = "ACTIVE"
 }
 data "oci_core_drgs" "segment" {
   depends_on = [oci_core_drg.segment]
-  count          = var.config.network.gateways.drg.create == true ? 1 : 0
+  count          = var.configuration.network.gateways.drg.create == true ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
 }
 data "oci_core_internet_gateways" "segment" {
   depends_on = [oci_core_internet_gateway.segment]
-  count          = var.schema.internet == "ENABLE" ? 1 : 0
+  count          = var.options.internet == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  display_name   = var.config.network.gateways.internet.name
+  display_name   = var.configuration.network.gateways.internet.name
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
 }
 data "oci_core_nat_gateways" "segment" {
   depends_on = [oci_core_nat_gateway.segment]
-  count          = var.schema.nat == "ENABLE" ? 1 : 0
+  count          = var.options.nat == "ENABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
-  display_name   = var.config.network.gateways.nat.name
+  display_name   = var.configuration.network.gateways.nat.name
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
 }
 data "oci_core_service_gateways" "segment" {
   depends_on = [oci_core_service_gateway.segment]
-  count          = var.schema.osn != "DISABLE" ? 1 : 0
+  count          = var.options.osn != "DISABLE" ? 1 : 0
   compartment_id = data.oci_identity_compartments.network.compartments[0].id
   state          = "AVAILABLE"
   vcn_id         = oci_core_vcn.segment.id
@@ -72,10 +72,10 @@ data "oci_core_route_tables" "default" {
 
 locals {
   create_gateways = {
-    "drg"      = var.config.network.gateways.drg.create
-    "internet" = var.schema.internet == "ENABLE" ? true : false
-    "nat"      = var.schema.nat == "ENABLE" ? true : false
-    "service"  = var.schema.osn != "DISABLE" ? true : false
+    "drg"      = var.configuration.network.gateways.drg.create
+    "internet" = var.options.internet == "ENABLE" ? true : false
+    "nat"      = var.options.nat == "ENABLE" ? true : false
+    "service"  = var.options.osn != "DISABLE" ? true : false
   }
   gateway_ids = zipmap(
     local.gateway_list,
@@ -87,10 +87,10 @@ locals {
     ])
   )
   gateway_list = compact([
-    local.create_gateways.drg ? var.config.network.gateways.drg.name : null,
-    local.create_gateways.internet ? var.config.network.gateways.internet.name : null,
-    local.create_gateways.nat ? var.config.network.gateways.nat.name : null,
-    local.create_gateways.service ? var.config.network.gateways.service.name : null
+    local.create_gateways.drg ? var.configuration.network.gateways.drg.name : null,
+    local.create_gateways.internet ? var.configuration.network.gateways.internet.name : null,
+    local.create_gateways.nat ? var.configuration.network.gateways.nat.name : null,
+    local.create_gateways.service ? var.configuration.network.gateways.service.name : null
   ])
   osn_ids = {
     "osn"     = lookup(data.oci_core_services.all.services[0], "id")
@@ -98,7 +98,7 @@ locals {
   }
   route_table_ids   = merge(
     {for table in oci_core_route_table.segment : table.display_name => table.id}, 
-    {"${var.config.network.display_name}_default_table" = data.oci_core_route_tables.default.route_tables[0].id}
+    {"${var.configuration.network.display_name}_default_table" = data.oci_core_route_tables.default.route_tables[0].id}
   )
   security_list_ids = {for list in oci_core_security_list.segment : list.display_name => list.id}
 }
