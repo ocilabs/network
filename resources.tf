@@ -9,7 +9,7 @@ resource "oci_core_vcn" "segment" {
   cidr_block     = var.configuration.network.cidr
   is_ipv6enabled = var.options.ipv6
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
 }
 
 resource "oci_core_drg" "segment" {
@@ -18,7 +18,7 @@ resource "oci_core_drg" "segment" {
   count          = local.create_gateways.drg ? 1 : 0
   display_name   = var.configuration.network.gateways.drg.name
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
 }
 
 resource "oci_core_drg_attachment" "segment" {
@@ -47,7 +47,7 @@ resource "oci_core_internet_gateway" "segment" {
   count          = local.create_gateways.internet ? 1 : 0
   display_name   = var.configuration.network.gateways.internet.name
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
 }
 
 resource "oci_core_nat_gateway" "segment" {
@@ -58,7 +58,7 @@ resource "oci_core_nat_gateway" "segment" {
   display_name   = var.configuration.network.gateways.nat.name
   block_traffic  = var.options.nat == "DISABLE" ? true : false
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
 }
 
 resource "oci_core_service_gateway" "segment" {
@@ -68,7 +68,7 @@ resource "oci_core_service_gateway" "segment" {
   count          = local.create_gateways.service ? 1 : 0
   display_name   = var.configuration.network.gateways.service.name
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
   services {
     #Required
     service_id = local.osn_ids[var.configuration.network.gateways.service.scope]
@@ -89,7 +89,7 @@ resource "oci_core_route_table" "segment" {
   display_name   = each.value.display_name
   vcn_id         = oci_core_vcn.segment.id
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
 
   dynamic "route_rules" {
     for_each = [for rule in each.value.route_rules: {
@@ -139,7 +139,7 @@ resource "oci_core_subnet" "segment" {
   display_name   = each.value.display_name
   defined_tags   = var.assets.resident.defined_tags
   dns_label      = each.value.dns_label
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
   prohibit_internet_ingress = each.value.prohibit_internet_ingress
   route_table_id = local.route_table_ids[each.value.route_table] 
   security_list_ids = ["${local.security_list_ids[each.value.security_list]}"]

@@ -101,5 +101,5 @@ resource "oci_core_network_security_group" "segment" {
   for_each       = var.configuration.network.security_groups
   display_name   = each.value.display_name
   defined_tags   = var.assets.resident.defined_tags
-  freeform_tags  = var.assets.resident.freeform_tags
+  freeform_tags  = local.module_freeform_tags
 }

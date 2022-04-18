@@ -92,6 +92,11 @@ locals {
     local.create_gateways.nat ? var.configuration.network.gateways.nat.name : null,
     local.create_gateways.service ? var.configuration.network.gateways.service.name : null
   ])
+  merged_freeform_tags = merge(local.module_freeform_tags, var.assets.resident.freeform_tags)
+  module_freeform_tags = {
+    # list of freeform tags, added to stack provided freeform tags
+    terraformed = "Please do not edit manually"
+  }
   osn_ids = {
     "osn"     = lookup(data.oci_core_services.all.services[0], "id")
     "storage" = lookup(data.oci_core_services.storage.services[0], "id")
