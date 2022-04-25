@@ -24,7 +24,7 @@ data "oci_core_services" "storage" {
   }
 }
 data "oci_identity_compartments" "network" {
-  compartment_id = var.configuration.tenancy.id
+  compartment_id = var.account.tenancy_id
   access_level   = "ANY"
   compartment_id_in_subtree = true
   name           = try(var.configuration.network.compartment, var.configuration.resident.name)
